@@ -2,36 +2,37 @@ import React, { useEffect, useState } from 'react';
 import ControlLine from '../ControlLine';
 import Arrows from "../../assets/arrows.png"
 import RaceLine from '../RaceLine';
-import { Races } from '../../styled';
-import { Pagination } from 'antd';
+import { NeonText, Races } from '../../styled';
+import { Flex, Pagination } from 'antd';
 export interface Car {
   name: string;
   color: string
 }
 
 function Garage() {
-  
-
   const [cars, setCars] = useState<Car[]>([]);
-  const getCars = async() => {
+  const getCars = async () => {
     const response = await fetch("http://localhost:3000/garage");
     setCars(await response.json());
   }
-  useEffect(()=> {
+  useEffect(() => {
     getCars()
-  },[])
+  }, [])
 
-  
+
   return (
     <>
       <ControlLine />
       <img src={Arrows} alt="" />
       <Races>
-      {cars.map((car) => (
+        {cars.map((car) => (
           <RaceLine {...{ car }} />
         ))}
-        {/* <Pagination defaultCurrent={1} total={2} /> */}
       </Races>
+      <Flex justify={"space-between"} align={'center'}>
+        <NeonText>GARAGE ({cars?.length})</NeonText>
+        <Pagination defaultCurrent={1} defaultPageSize={7} total={cars?.length} />
+      </Flex>
     </>
   );
 }

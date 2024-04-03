@@ -5,6 +5,7 @@ import finish from "./assets/finish.png"
 export const Wrapper = styled.main`
     max-width: 1200px;
     margin: 0 auto;
+    padding: 50px;
 `;
 
 export const ControlLineWrapper = styled.div`
@@ -64,6 +65,7 @@ export const Race = styled.li`
 
 export const Races = styled.ul`
 position: relative;
+margin-bottom: 30px;
 &:before {
     background-image: url(${start});
     left: 200px;
@@ -80,4 +82,13 @@ position: relative;
     background-image: url(${finish});
     right: 0;
 }
+`;
+
+export const NeonText = styled.span`
+    color: #ff7de3;
+    text-shadow: 0 0 7px #ff7de3,
+                 0 0 10px #ff7de3,
+                 0 0 21px #ff7de3,
+                 0 0 42px #fff;
+    font-size: 20px;
 `

@@ -11,3 +11,11 @@ body {
     width: 100vw;
     min-height: 100vh;
 }
+
+.ant-pagination *, .ant-pagination .ant-pagination-item a  {
+    color: #1677ff;
+}
+
+.ant-pagination .ant-pagination-item-active {
+    background-color: transparent;
+}

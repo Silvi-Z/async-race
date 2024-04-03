@@ -13,7 +13,7 @@ Checklist
 🏁 Basic Structure (85 points)
 1. View Configuration (30 points)
  - [X] Two Views (10 points): Implement two primary views: "Garage" and "Winners".
- - [ ] Garage View Content (5 points): The "Garage" view must display its name, the current page number, and the total number of cars in the database (how many car user has in his garage).
+ - [X] Garage View Content (5 points): The "Garage" view must display its name, the current page number, and the total number of cars in the database (how many car user has in his garage).
  - [ ] Winners View Content (5 points): The "Winners" view should similarly display its name, the current page number, and the total count of records in the database (how many records the winners table contains).
  - [ ] Persistent State (10 points): Ensure the view state remains consistent when navigating between views. This includes preserving page numbers and input states. For example, page number shouldn't be reset, input controls should contain that they contained before switching, etc.
 2. Garage View Functionality (55 points)
@@ -21,7 +21,7 @@ Car Management (45 points)
  - [ ] CRUD Operations (20 points): Enable users to create, update, and delete cars, and display the list of cars. A car has two attributes: "name" and "color". For "delete"-operation car should be deleted from "garage" table as well as from "winners".
  - [ ] Color Selection (10 points): Allow color selection from an RGB palette (like here), displaying the selected color on the car's image along with its name.
  - [ ] Management Buttons (5 points): Provide buttons near each car's image for updating its attributes or deleting it.
- - [ ] Pagination (10 points): Implement pagination for the "Garage" view, displaying 7 cars per page.
+ - [X] Pagination (10 points): Implement pagination for the "Garage" view, displaying 7 cars per page.
 Car Generation (10 points)
  - [ ] Random Car Creation (10 points): There should be a button to create random cars (100 cars per click). Name should be assembled from two random parts, for example "Tesla" + "Model S", or "Ford" + "Mustang" (At least 10 different names for each part). Color should be also generated randomly.
 🚗 Car Animation (50 points)
