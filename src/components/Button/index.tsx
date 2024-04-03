@@ -10,17 +10,18 @@ interface ButtonProps {
   context: string;
   color: string;
   size?: string;
+  type?: any;
 }
 
-const Button: React.FC<ButtonProps> = ({ context, color, size }) => {
+const Button: React.FC<ButtonProps> = ({ context, color, size, type }) => {
   const dispatch = useDispatch();
   
   const handleClick: ClickHandler = () => {
-    dispatch({ type: "CURRENT_PAGE", val:context})
+    !type && dispatch({ type: "CURRENT_PAGE", val:context})
   };
 
   return (
-    <ButtonWrapper onClick={handleClick} color={color} size={size}>{context}</ButtonWrapper>
+    <ButtonWrapper type={type} onClick={handleClick} color={color} size={size}>{context}</ButtonWrapper>
   );
 }
 

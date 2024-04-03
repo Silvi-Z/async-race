@@ -3,7 +3,7 @@ import ControlLine from '../ControlLine';
 import Arrows from "../../assets/arrows.png"
 import RaceLine from '../RaceLine';
 import { NeonText, Races } from '../../styled';
-import { Flex, Pagination } from 'antd';
+import { Flex, Pagination , PaginationProps} from 'antd';
 export interface Car {
   name: string;
   color: string
@@ -11,18 +11,24 @@ export interface Car {
 
 function Garage() {
   const [cars, setCars] = useState<Car[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const getCars = async () => {
-    const response = await fetch("http://localhost:3000/garage");
+    const response = await fetch(`http://localhost:3000/garage?&_page=${currentPage}`);
     setCars(await response.json());
   }
   useEffect(() => {
     getCars()
-  }, [])
+  }, [currentPage])
+
+  const changePage: PaginationProps['onChange'] = (page) => {
+    setCurrentPage(page);
+  };
 
 
   return (
     <>
-      <ControlLine />
+      <ControlLine getCars={getCars} />
       <img src={Arrows} alt="" />
       <Races>
         {cars.map((car) => (
@@ -31,7 +37,7 @@ function Garage() {
       </Races>
       <Flex justify={"space-between"} align={'center'}>
         <NeonText>GARAGE ({cars?.length})</NeonText>
-        <Pagination defaultCurrent={1} defaultPageSize={7} total={cars?.length} />
+        <Pagination onChange={changePage} defaultCurrent={currentPage} defaultPageSize={7} total={cars?.length} />
       </Flex>
     </>
   );
