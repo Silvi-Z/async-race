@@ -7,16 +7,16 @@ import { Provider } from 'react-redux';
 import { createStore, Reducer } from 'redux';
 
 export interface State {
-  selected: string[];
+  selected: string;
 }
 
 export interface Action {
   type: string;
-  val: string[];
+  val: string;
 }
 
 const initialState: State = {
-  selected: [],
+  selected: 'GARAGE',
 };
 
 const reducer: Reducer<State, Action> = (state = initialState, action) => {

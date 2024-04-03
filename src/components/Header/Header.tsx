@@ -7,8 +7,8 @@ function Header() {
   return (
     <HeaderWrapper>
       <div>
-        <Button color="#58d2fe" context='Garage'/>
-        <Button color="#f804c4" context='Winners'/>
+        <Button size="big" color="#58d2fe" context='GARAGE'/>
+        <Button size="big" color="#f804c4" context='WINNERS'/>
       </div>
 
       </HeaderWrapper>

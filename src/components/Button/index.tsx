@@ -9,9 +9,10 @@ interface ClickHandler {
 interface ButtonProps {
   context: string;
   color: string;
+  size?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ context, color }) => {
+const Button: React.FC<ButtonProps> = ({ context, color, size }) => {
   const dispatch = useDispatch();
   
   const handleClick: ClickHandler = () => {
@@ -19,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({ context, color }) => {
   };
 
   return (
-    <ButtonWrapper onClick={handleClick} color={color}>{context}</ButtonWrapper>
+    <ButtonWrapper onClick={handleClick} color={color} size={size}>{context}</ButtonWrapper>
   );
 }
 
