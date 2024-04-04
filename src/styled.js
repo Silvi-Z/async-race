@@ -85,7 +85,7 @@ margin-bottom: 30px;
 `;
 
 export const NeonText = styled.span`
-    color: #ff7de3;
+    color: ${props=> props.color};
     text-shadow: 0 0 7px #ff7de3,
                  0 0 10px #ff7de3,
                  0 0 21px #ff7de3,

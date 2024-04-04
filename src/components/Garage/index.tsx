@@ -3,41 +3,59 @@ import ControlLine from '../ControlLine';
 import Arrows from "../../assets/arrows.png"
 import RaceLine from '../RaceLine';
 import { NeonText, Races } from '../../styled';
-import { Flex, Pagination , PaginationProps} from 'antd';
+import { Flex } from 'antd';
+import Button from '../Button';
 export interface Car {
   name: string;
-  color: string
+  color: string;
+  id: number
 }
 
 function Garage() {
   const [cars, setCars] = useState<Car[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState<string>('1')
+  const [selectedCarId, setSelectedCarId] = useState<any>()
+
 
   const getCars = async () => {
-    const response = await fetch(`http://localhost:3000/garage?&_page=${currentPage}`);
+    const response = await fetch(`http://localhost:3000/garage?_page=${currentPage}&_limit=7`);
+    setTotal(response.headers.get("X-Total-Count") || '')
     setCars(await response.json());
   }
   useEffect(() => {
     getCars()
   }, [currentPage])
 
-  const changePage: PaginationProps['onChange'] = (page) => {
-    setCurrentPage(page);
+  const changePage = (type: string) => {
+    const isCar = +total/7 > currentPage
+    if(type === "next" && isCar) {
+      setCurrentPage(currentPage+1);
+    }else if (currentPage > 1 && type === "prev") {
+      setCurrentPage(currentPage-1)
+    }
+    
   };
-
+  const updateCarId = (name: number):void => {
+    setSelectedCarId(name)
+}
 
   return (
     <>
-      <ControlLine getCars={getCars} />
+      <ControlLine getCars={getCars} id={selectedCarId} />
       <img src={Arrows} alt="" />
       <Races>
         {cars.map((car) => (
-          <RaceLine {...{ car }} />
+          <RaceLine updateCarId={updateCarId} getCars={getCars} {...{ car }} />
         ))}
       </Races>
       <Flex justify={"space-between"} align={'center'}>
-        <NeonText>GARAGE ({cars?.length})</NeonText>
-        <Pagination onChange={changePage} defaultCurrent={currentPage} defaultPageSize={7} total={cars?.length} />
+        <NeonText color={"#ff7de3"}>GARAGE ({total})</NeonText>
+        <div>
+        <Button onClick={()=>changePage('prev')} color={"blue"} context="prev"/>
+        <NeonText color={"blue"}>PAGE {currentPage}</NeonText>
+        <Button onClick={()=>changePage('next')} color={"blue"} context="next"/>
+        </div>
       </Flex>
     </>
   );

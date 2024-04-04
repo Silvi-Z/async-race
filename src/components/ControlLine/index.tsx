@@ -2,38 +2,45 @@ import React, { useMemo, useState } from 'react';
 import Button from '../Button';
 import { ColorPicker, Form, Input, type FormProps, ColorPickerProps, GetProp } from 'antd';
 import { ControlLineWrapper } from '../../styled';
-
+import { performApiRequest } from '../../form';
 
 type FieldType = {
     name?: string;
     color?: string;
 };
 interface ControlLineProps {
-    getCars: () => void
+    getCars: () => void;
+    id: number
 }
 type Color = GetProp<ColorPickerProps, 'value'>;
 
-const ControlLine: React.FC<ControlLineProps> = ({ getCars }) => {
+const ControlLine: React.FC<ControlLineProps> = ({ getCars, id }) => {
+
     const [color, setColor] = useState<Color>('');
+    const [createForm] = Form.useForm();
+    const [updateForm] = Form.useForm();
 
     const changedColor = useMemo<string>(() =>
         (typeof color === 'string' ? color : color!.toHexString()),
         [color],
     );
-
     const createCar: FormProps<FieldType>["onFinish"] = async (values) => {
-        await fetch("http://localhost:3000/garage", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                name: values.name,
-                color: changedColor
-            }),
-        });
+        await performApiRequest(`http://localhost:3000/garage`, "POST", {
+            name: values.name,
+            color: changedColor
+        })
+        createForm.resetFields();
         getCars();
-    }
+    };
+    
+    const updateCar: FormProps<FieldType>["onFinish"] = async (values) => {
+        await performApiRequest(`http://localhost:3000/garage/${id}`, "PUT", {
+            name: values.name,
+            color: changedColor
+        })
+        updateForm.resetFields();
+        getCars();
+    };
 
 
     return (
@@ -43,6 +50,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ getCars }) => {
                 <Button size="small" context='RESET' color='#ff7de3' />
             </div>
             <Form
+                form={createForm}
                 layout="inline"
                 onFinish={createCar}
             >
@@ -62,10 +70,28 @@ const ControlLine: React.FC<ControlLineProps> = ({ getCars }) => {
                     <Button type="submit" size="small" context='CREATE' color='#ff7de3' />
                 </Form.Item>
             </Form>
+            <Form
+                form={updateForm}
+                layout="inline"
+                onFinish={updateCar}
+            >
+                <Form.Item<FieldType>
+                    name="name"
+                >
+                    <Input disabled={!id} type="text" />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    name="color"
+                >
+                    <ColorPicker value={color} onChange={setColor} disabled={!id} />
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                    <Button type="submit" disabled={!id} size="small" context='UPDATE' color='#ff7de3' />
+                </Form.Item>
+            </Form>
             <div>
-                <Input type="text" />
-                <ColorPicker defaultValue="#1677ff" />
-                <Button size="small" context='UPDATE' color='#ff7de3' />
             </div>
             <div>
                 <Button size="small" context='GENERATE CARS' color='#ff7de3' />

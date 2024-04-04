@@ -11,9 +11,11 @@ interface ButtonProps {
   color: string;
   size?: string;
   type?: any;
+  onClick?: any;
+  disabled?: boolean
 }
 
-const Button: React.FC<ButtonProps> = ({ context, color, size, type }) => {
+const Button: React.FC<ButtonProps> = ({ context, color, size, type, onClick, disabled }) => {
   const dispatch = useDispatch();
   
   const handleClick: ClickHandler = () => {
@@ -21,7 +23,7 @@ const Button: React.FC<ButtonProps> = ({ context, color, size, type }) => {
   };
 
   return (
-    <ButtonWrapper type={type} onClick={handleClick} color={color} size={size}>{context}</ButtonWrapper>
+    <ButtonWrapper disabled={disabled} type={type} onClick={onClick || handleClick} color={color} size={size}>{context}</ButtonWrapper>
   );
 }
 
