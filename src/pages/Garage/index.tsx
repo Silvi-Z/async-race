@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import ControlLine from '../ControlLine';
+import ControlLine from '../../components/ControlLine';
 import Arrows from "../../assets/arrows.png"
-import RaceLine from '../RaceLine';
+import RaceLine from '../../components/RaceLine';
 import { NeonText, Races } from '../../styled';
 import { Flex } from 'antd';
-import Button from '../Button';
+import Button from '../../components/Button';
 export interface Car {
   name: string;
   color: string;

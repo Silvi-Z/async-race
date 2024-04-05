@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../Button';
 import {CarIcon} from "../../assets/car.js"
 import { Race } from '../../styled';
-import { Car } from '../Garage';
+import { Car } from '../../pages/Garage';
 
 interface RaceProps {
     car: Car,

@@ -90,5 +90,5 @@ export const NeonText = styled.span`
                  0 0 10px #ff7de3,
                  0 0 21px #ff7de3,
                  0 0 42px #fff;
-    font-size: 20px;
+    font-size: ${props=> props.size || '20px'};
 `

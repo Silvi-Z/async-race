@@ -2,8 +2,9 @@ import React from 'react';
 import Header from './components/Header/Header';
 import { useSelector } from 'react-redux';
 import { State } from './index';
-import Garage from './components/Garage';
+import Garage from './pages/Garage';
 import { Wrapper } from './styled';
+import Winners from './pages/Winners';
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
     <Header/>
     <Wrapper>
       {selected === "GARAGE" ?
-      <Garage/> : 'winners'}
+      <Garage/> : <Winners/>}
     </Wrapper>
     </>
   );
