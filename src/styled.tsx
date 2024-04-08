@@ -2,6 +2,11 @@ import styled from "styled-components";
 import start from "./assets/start.png";
 import finish from "./assets/finish.png"
 
+type StyledProps = {
+    speed?: number,
+    size?:string
+}
+
 export const Wrapper = styled.main`
     max-width: 1200px;
     margin: 0 auto;
@@ -19,7 +24,7 @@ export const ControlLineWrapper = styled.div`
     }
 `;
 
-export const Race = styled.li`
+export const Race = styled.li<StyledProps>`
     display: flex;
     align-items: center;
     font-size:30px;
@@ -46,8 +51,8 @@ export const Race = styled.li`
         position: absolute;
         right: 0;
     }
-    img {
-        // animation: 5s in-out ;
+    .test > * {
+        animation: ${props=> props.speed && `${props.speed}s in-out`} ;
         height: 50px;
         width: fit-content;
         position: absolute;
@@ -84,7 +89,7 @@ margin-bottom: 30px;
 }
 `;
 
-export const NeonText = styled.span`
+export const NeonText = styled.span<StyledProps>`
     color: ${props=> props.color};
     text-shadow: 0 0 7px #ff7de3,
                  0 0 10px #ff7de3,

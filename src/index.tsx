@@ -8,6 +8,8 @@ import { createStore, Reducer } from 'redux';
 
 export interface State {
   selected: string;
+  cars: any,
+  total: string
 }
 
 export interface Action {
@@ -17,12 +19,18 @@ export interface Action {
 
 const initialState: State = {
   selected: 'GARAGE',
+  cars: [],
+  total: ''
 };
 
 const reducer: Reducer<State, Action> = (state = initialState, action) => {
   switch (action.type) {
     case 'CURRENT_PAGE':
       return { ...state, selected: action.val };
+    case 'CARS':
+      return { ...state, cars: action.val };
+    case 'TOTAL':
+      return { ...state, total: action.val }
     default:
       return state;
   }

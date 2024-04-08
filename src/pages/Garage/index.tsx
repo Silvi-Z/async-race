@@ -5,6 +5,10 @@ import RaceLine from '../../components/RaceLine';
 import { NeonText, Races } from '../../styled';
 import { Flex } from 'antd';
 import Button from '../../components/Button';
+import { getCarsForm } from '../../form';
+import { State, store } from '../..';
+import { useDispatch } from "react-redux";
+import { useSelector } from 'react-redux';
 export interface Car {
   name: string;
   color: string;
@@ -14,18 +18,21 @@ export interface Car {
 function Garage() {
   const [cars, setCars] = useState<Car[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState<string>('1')
+  const total = useSelector((state:State) => state.total)
   const [selectedCarId, setSelectedCarId] = useState<any>()
+  const dispatch = useDispatch();
+  const carsSelector = useSelector((state:State) => state.cars)
 
-
-  const getCars = async () => {
-    const response = await fetch(`http://localhost:3000/garage?_page=${currentPage}&_limit=7`);
-    setTotal(response.headers.get("X-Total-Count") || '')
-    setCars(await response.json());
+  const getCars = async() => {
+    await getCarsForm(currentPage, dispatch);
   }
   useEffect(() => {
     getCars()
   }, [currentPage])
+
+  useEffect(()=> {
+    setCars(store.getState().cars)
+  },[carsSelector])
 
   const changePage = (type: string) => {
     const isCar = +total/7 > currentPage
@@ -42,11 +49,11 @@ function Garage() {
 
   return (
     <>
-      <ControlLine getCars={getCars} id={selectedCarId} />
+      <ControlLine currentPage={currentPage} id={selectedCarId} />
       <img src={Arrows} alt="" />
       <Races>
         {cars.map((car) => (
-          <RaceLine updateCarId={updateCarId} getCars={getCars} {...{ car }} />
+          <RaceLine updateCarId={updateCarId} currentPage={currentPage} {...{ car }} />
         ))}
       </Races>
       <Flex justify={"space-between"} align={'center'}>

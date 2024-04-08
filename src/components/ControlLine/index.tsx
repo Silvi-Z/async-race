@@ -1,21 +1,29 @@
 import React, { useMemo, useState } from 'react';
 import Button from '../Button';
-import { ColorPicker, Form, Input, type FormProps, ColorPickerProps, GetProp } from 'antd';
+import {
+    ColorPicker,
+    Form,
+    Input,
+    type FormProps,
+    ColorPickerProps,
+    GetProp
+} from 'antd';
 import { ControlLineWrapper } from '../../styled';
-import { performApiRequest } from '../../form';
+import { getCarsForm, performApiRequest } from '../../form';
+import { useDispatch } from 'react-redux';
 
 type FieldType = {
     name?: string;
     color?: string;
 };
 interface ControlLineProps {
-    getCars: () => void;
+    currentPage: number;
     id: number
 }
 type Color = GetProp<ColorPickerProps, 'value'>;
 
-const ControlLine: React.FC<ControlLineProps> = ({ getCars, id }) => {
-
+const ControlLine: React.FC<ControlLineProps> = ({ currentPage, id }) => {
+    const dispatch = useDispatch()
     const [color, setColor] = useState<Color>('');
     const [createForm] = Form.useForm();
     const [updateForm] = Form.useForm();
@@ -30,16 +38,16 @@ const ControlLine: React.FC<ControlLineProps> = ({ getCars, id }) => {
             color: changedColor
         })
         createForm.resetFields();
-        getCars();
+        await getCarsForm(currentPage, dispatch)
     };
-    
+
     const updateCar: FormProps<FieldType>["onFinish"] = async (values) => {
         await performApiRequest(`http://localhost:3000/garage/${id}`, "PUT", {
             name: values.name,
             color: changedColor
         })
         updateForm.resetFields();
-        getCars();
+        await getCarsForm(currentPage, dispatch)
     };
 
 
