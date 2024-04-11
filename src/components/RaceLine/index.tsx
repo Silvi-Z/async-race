@@ -5,9 +5,8 @@ import { Race } from '../../styled';
 import { Car } from '../../pages/Garage';
 import { getCarsForm, startCarRace } from '../../form';
 import { useDispatch } from 'react-redux';
-import { Modal } from 'antd';
 import { useSelector } from 'react-redux';
-import { State, store } from '../..';
+import { State } from '../..';
 
 interface RaceProps {
     car: Car,
@@ -18,7 +17,8 @@ interface RaceProps {
 
 const RaceLine: React.FC<RaceProps> = ({ startAllCars, currentPage, car, updateCarId }) => {
     const [velocity, setVelocity] = useState(0);
-    const [drive, setDrive] = useState(true)
+    const [drive, setDrive] = useState(true);
+    const [status, setStatus] = useState('stopped')
     const best = useSelector((state: State) => state.best)
     const dispatch = useDispatch()
     const deleteCar = async (id: number) => {
@@ -28,17 +28,19 @@ const RaceLine: React.FC<RaceProps> = ({ startAllCars, currentPage, car, updateC
         await getCarsForm(currentPage, dispatch)
     }
 
-    const start = async (id: number) => {
-        const data = await startCarRace(id, 'started');
+    const start = async (id: number, action: string, all: string) => {
+        const data = await startCarRace(id, action);
         setVelocity(data[0])
-        const test = await startCarRace(id, 'drive');
-        test ? dispatch({ type: "BEST", value: data }) : dispatch({ type: "BEST", value: [0, id] })
-        setDrive(test)
-        
+        setStatus('started')
+        if(action === "started"){
+            const driveTest = await startCarRace(id, 'drive');
+            all && (driveTest ? dispatch({ type: "BEST", value: data }) : dispatch({ type: "BEST", value: [0, id] }))
+            setDrive(driveTest)
+        }
     }
 
     useEffect(() => {
-        startAllCars && start(car.id)
+        startAllCars && start(car.id, "started", "all")
     }, [startAllCars])
     return (
         <Race speed={velocity} drive={drive}>
@@ -48,8 +50,8 @@ const RaceLine: React.FC<RaceProps> = ({ startAllCars, currentPage, car, updateC
                     <Button type={'submit'} onClick={() => deleteCar(car.id)} context="REMOVE" color="#58d2fe" />
                 </div>
                 <div>
-                    <Button onClick={() => start(car.id)} context="A" color="#faff1f" />
-                    <Button context="B" color="#faff1f" />
+                    <Button disabled={status === "started"} onClick={() => start(car.id, "started", "")} context="A" color="#faff1f" />
+                    <Button disabled={status === "stopped"} onClick={() => start(car.id, "stopped", "")} context="B" color="#faff1f" />
                 </div>
                 <div className='test'>
                     <CarIcon fill={car.color} />
