@@ -1,0 +1,42 @@
+{
+    "Tesla" : [
+        "Model S"
+    ],
+    "BMW" : [
+        "x6",
+        "m5"
+    ],
+    "Ford" : [
+        "Fusion",
+        "Mustang"
+    ],
+    "Mercedes" : [
+        "S class"
+    ],
+    "Acura" : [
+        "Integra"
+    ],
+    "Mitsubishi" : [
+        "Lancer EVO"
+    ],
+    "Ferrari" : [
+        "Enzo",
+        "488 spider",
+        "GTC lusso",
+        "612",
+        "Dino",
+        "750 monza"
+    ],
+    "Lamborgini" : [
+        "Hurakan",
+        "Urus",
+        "Aventador"
+    ],
+    "Subaru" : [
+        "Immpreza",
+        "SRX"
+    ],
+    "Maserati" : [
+        "Grant turizmo"
+    ]
+}

@@ -32,17 +32,16 @@ function Garage() {
     await getCarsForm(currentPage, dispatch);
   }
   useEffect(() => {
-    const isAllCars = (best.length === cars.length) && (best.length > 0)
-    if (isAllCars) {
-      const bestResult = best.reduce((smallest, current) => {
-        if (current[0] > 0 && current[0] < smallest[0]) {
-            return current;
-        } else {
-            return smallest;
-        }
-    }, best.find(item => item[0] > 0));      
-    const winnerCar = cars.find(car => car.id === bestResult[1]);
-      if(winnerCar) {
+    const bestResult = best.reduce((smallest, current) => {
+      if (current[0] > 0 && current[0] < smallest[0]) {
+        return current;
+      } else {
+        return smallest;
+      }
+    }, best.find(item => item[0] > 0));
+    if (bestResult) {
+      const winnerCar = cars.find(car => car.id === bestResult[1]);
+      if (winnerCar) {
         setBestScore([bestResult[0], winnerCar.name])
         setIsModalOpen(true)
       }
@@ -71,7 +70,6 @@ function Garage() {
 
   const start = async () => {
     setStartAllCars(!startAllCars)
-    // const data = await startCarRace(id)
   }
 
   return (

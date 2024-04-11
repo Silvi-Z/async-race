@@ -11,6 +11,11 @@ import {
 import { ControlLineWrapper } from '../../styled';
 import { getCarsForm, performApiRequest, startCarRace } from '../../form';
 import { useDispatch } from 'react-redux';
+import randomBrands from "../../cars.json"
+
+type CarData = {
+    [brand: string]: string[];
+};
 
 type FieldType = {
     name?: string;
@@ -19,7 +24,7 @@ type FieldType = {
 interface ControlLineProps {
     currentPage: number;
     id: number;
-    start: ()=>void
+    start: () => void
 }
 type Color = GetProp<ColorPickerProps, 'value'>;
 
@@ -52,10 +57,37 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, currentPage, id }) => 
     };
 
 
+    const generateRandomCars = async () => {
+        const brands: CarData = randomBrands;
+        const getRandomInt = (min: number, max: number) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+
+        const generateRandomCar = async () => {
+            const brandNames = Object.keys(brands);
+            const randomBrand = brandNames[getRandomInt(0, brandNames.length - 1)];
+            const models = brands[randomBrand];
+            const randomModel = models[getRandomInt(0, models.length - 1)];
+            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            await performApiRequest(`http://localhost:3000/garage`, "POST", {
+                name: `${randomBrand} ${randomModel}`,
+                color: `#${randomColor}`
+            })
+        };
+
+        const randomCars = [];
+        for (let i = 0; i < 100; i++) {
+            randomCars.push(generateRandomCar());
+        }
+        await getCarsForm(currentPage, dispatch)
+
+    };
+
+
     return (
         <ControlLineWrapper>
             <div>
-                <Button onClick={()=> start()} size="small" context='RACE' color='#58fe9c' />
+                <Button onClick={() => start()} size="small" context='RACE' color='#58fe9c' />
                 <Button size="small" context='RESET' color='#ff7de3' />
             </div>
             <Form
@@ -103,7 +135,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, currentPage, id }) => 
             <div>
             </div>
             <div>
-                <Button size="small" context='GENERATE CARS' color='#ff7de3' />
+                <Button onClick={() => generateRandomCars()} size="small" context='GENERATE CARS' color='#ff7de3' />
             </div>
         </ControlLineWrapper>
     );
