@@ -4,7 +4,8 @@ import finish from "./assets/finish.png"
 
 type StyledProps = {
     speed?: number,
-    size?:string
+    size?:string,
+    drive?: boolean
 }
 
 export const Wrapper = styled.main`
@@ -52,8 +53,11 @@ export const Race = styled.li<StyledProps>`
         right: 0;
     }
     .test > * {
-        animation: ${props=> props.speed && `${props.speed}s in-out`} ;
+        animation: ${props=> props.speed && `${props.speed}s forwards in-out`} ;
+        animation-play-state: ${props=> !props.drive && `paused`};
         height: 50px;
+        transition: 1s;
+        animation-timing-function: linear;
         width: fit-content;
         position: absolute;
         left: 0;

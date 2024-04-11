@@ -19,3 +19,6 @@ body {
 .ant-pagination .ant-pagination-item-active {
     background-color: transparent;
 }
+.ant-modal-body {
+    text-align: center;
+}

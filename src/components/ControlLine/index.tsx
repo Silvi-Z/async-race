@@ -9,7 +9,7 @@ import {
     GetProp
 } from 'antd';
 import { ControlLineWrapper } from '../../styled';
-import { getCarsForm, performApiRequest } from '../../form';
+import { getCarsForm, performApiRequest, startCarRace } from '../../form';
 import { useDispatch } from 'react-redux';
 
 type FieldType = {
@@ -18,11 +18,12 @@ type FieldType = {
 };
 interface ControlLineProps {
     currentPage: number;
-    id: number
+    id: number;
+    start: ()=>void
 }
 type Color = GetProp<ColorPickerProps, 'value'>;
 
-const ControlLine: React.FC<ControlLineProps> = ({ currentPage, id }) => {
+const ControlLine: React.FC<ControlLineProps> = ({ start, currentPage, id }) => {
     const dispatch = useDispatch()
     const [color, setColor] = useState<Color>('');
     const [createForm] = Form.useForm();
@@ -54,7 +55,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ currentPage, id }) => {
     return (
         <ControlLineWrapper>
             <div>
-                <Button size="small" context='RACE' color='#58fe9c' />
+                <Button onClick={()=> start()} size="small" context='RACE' color='#58fe9c' />
                 <Button size="small" context='RESET' color='#ff7de3' />
             </div>
             <Form

@@ -9,18 +9,21 @@ import { createStore, Reducer } from 'redux';
 export interface State {
   selected: string;
   cars: any,
-  total: string
+  total: string,
+  best: Array<any>
 }
 
 export interface Action {
   type: string;
   val: string;
+  value: Array<any>
 }
 
 const initialState: State = {
   selected: 'GARAGE',
   cars: [],
-  total: ''
+  total: '',
+  best: []
 };
 
 const reducer: Reducer<State, Action> = (state = initialState, action) => {
@@ -30,7 +33,9 @@ const reducer: Reducer<State, Action> = (state = initialState, action) => {
     case 'CARS':
       return { ...state, cars: action.val };
     case 'TOTAL':
-      return { ...state, total: action.val }
+      return { ...state, total: action.val };
+      case 'BEST':
+        return { ...state, best: [...state.best, action.value]};
     default:
       return state;
   }

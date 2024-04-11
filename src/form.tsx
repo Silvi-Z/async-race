@@ -3,11 +3,9 @@ import { Dispatch } from "redux";
 interface Car {
     id: number;
     name: string;
-    return: () => void
-  }
+}
   
-
-export const performApiRequest = async (url:string, method:string, body:object) => {
+export const performApiRequest = async (url: string, method: string, body: object) => {
     try {
         const response = await fetch(url, {
             method: method,
@@ -16,28 +14,49 @@ export const performApiRequest = async (url:string, method:string, body:object) 
             },
             body: JSON.stringify(body),
         });
-        if (!response.ok) {
-            throw new Error('Failed to fetch');
-        }
-        return response.json();
+
+      
+
+        return response.json(); // Return parsed JSON response
     } catch (error) {
-        console.error('Error:', error);
-        throw error;
+        if (error instanceof TypeError && error.message.includes('API key')) {
+            console.error('Invalid API key:', error);
+        } else {
+            console.error('There was a problem with the Fetch operation:', error);
+        }
+        throw error; // Re-throw the error to be handled by caller
     }
 };
 
 export const getCarsForm = async (
     currentPage: number,
     dispatch: Dispatch<any>
-  ): Promise<void> => {
+): Promise<void> => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/garage?_page=${currentPage}&_limit=7`
-      );
-      const carsData: Car[] = await response.json();
-      dispatch({ type: "CARS", val: carsData });
-      dispatch({ type: "TOTAL", val: response.headers.get("X-Total-Count") });
+        const response = await fetch(
+            `http://localhost:3000/garage?_page=${currentPage}&_limit=7`
+        );
+
+      
+        const carsData: Car[] = await response.json();
+        dispatch({ type: "CARS", val: carsData });
+        dispatch({ type: "TOTAL", val: response.headers.get("X-Total-Count") });
     } catch (error) {
-      console.error("Error:", error);
+        console.error("Error:", error);
+        throw error; // Re-throw the error to be handled by caller
     }
-  };
+};
+
+export const startCarRace = async (id: number, status: string) => {
+    try {
+        const res = await performApiRequest(
+            `http://localhost:3000/engine?id=${id}&status=${status}`,
+            "PATCH",
+            {}
+        );
+        return res?.success || [Math.floor((res.distance /res.velocity) / 1000), id];
+    } catch (error) {
+        console.error("Error:", error);
+        return false
+    }
+};
