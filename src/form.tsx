@@ -21,17 +21,21 @@ export const performApiRequest = async (url: string, method: string, body: objec
 };
 
 export const getCarsForm = async (
-    currentPage: number,
-    dispatch: Dispatch<any>
-): Promise<void> => {
-  console.log('currentPage',currentPage)
+    dispatch: Dispatch<any>,
+    limit?: boolean,
+    currentPage?: number
+): Promise<Car[]> => {
     try {
         const response = await fetch(
-            `http://localhost:3000/garage?_page=${currentPage}&_limit=7`
+            limit ? `http://localhost:3000/garage?_page=${currentPage}&_limit=7`
+            : `http://localhost:3000/garage`
         );
         const carsData: Car[] = await response.json();
-        dispatch({ type: "CARS", val: carsData });
-        dispatch({ type: "TOTAL", val: response.headers.get("X-Total-Count") });
+        if(limit){
+            dispatch({ type: "CARS", val: carsData });
+            dispatch({ type: "TOTAL", val: response.headers.get("X-Total-Count") });
+        }
+            return carsData
     } catch (error) {
         throw error;
     }

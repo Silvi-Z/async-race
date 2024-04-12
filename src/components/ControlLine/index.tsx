@@ -45,7 +45,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id 
             color: changedColor
         })
         createForm.resetFields();
-        await getCarsForm(currentPage, dispatch)
+        await getCarsForm(dispatch, true, currentPage)
     };
 
     const updateCar: FormProps<FieldType>["onFinish"] = async (values) => {
@@ -54,7 +54,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id 
             color: changedColor
         })
         updateForm.resetFields();
-        await getCarsForm(currentPage, dispatch)
+        await getCarsForm(dispatch, true, currentPage)
     };
 
 
@@ -80,7 +80,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id 
         for (let i = 0; i < 100; i++) {
             randomCars.push(generateRandomCar());
         }
-        await getCarsForm(currentPage, dispatch)
+        await getCarsForm(dispatch, true, currentPage)
 
     };
 

@@ -5,7 +5,7 @@ import RaceLine from '../../components/RaceLine';
 import { NeonText, Races } from '../../styled';
 import { Flex, Modal } from 'antd';
 import Button from '../../components/Button';
-import { getCarsForm } from '../../form';
+import { getCarsForm, performApiRequest } from '../../form';
 import { State, store } from '../..';
 import { useDispatch } from "react-redux";
 import { useSelector } from 'react-redux';
@@ -30,7 +30,7 @@ function Garage() {
   const [status, setStatus] = useState('stopped')
 
   const getCars = async () => {
-    await getCarsForm(currentPage, dispatch);
+    await getCarsForm(dispatch, true, currentPage);
   }
   useEffect(() => {
     const bestResult = best.reduce((smallest, current) => {
@@ -42,12 +42,39 @@ function Garage() {
     }, best.find(item => item[0] > 0));
     if (bestResult && status === "started") {
       const winnerCar = cars.find(car => car.id === bestResult[1]);
-      if (winnerCar) {
-        setBestScore([bestResult[0], winnerCar.name])
+      if (winnerCar && cars.length === best.length) {
+        addToWinners(winnerCar, bestResult);
         setIsModalOpen(true)
+        dispatch({ type: "BEST", value: [] });
       }
     }
   }, [best])
+
+  const addToWinners = async (
+    winnerCar: {
+      id: any;
+      name: string;
+    },
+    bestResult: [number]
+  ): Promise<void> => {
+    const response = await fetch(`http://localhost:3000/winners`);
+    const winnerdData = await response.json();
+    const isWinner = winnerdData.find((e: any) => e.id === winnerCar.id)
+    if (isWinner) {
+      performApiRequest(`http://localhost:3000/winners/${winnerCar.id}`, "PUT", {
+        wins: isWinner.wins+1,
+        time: bestResult[0]
+      })
+    } else {
+      performApiRequest(`http://localhost:3000/winners`, "POST", {
+        id: winnerCar.id,
+        wins: 1,
+        time: bestResult[0]
+      })
+    }
+
+    setBestScore([bestResult[0], winnerCar.name])
+  }
   useEffect(() => {
     getCars()
   }, [currentPage])

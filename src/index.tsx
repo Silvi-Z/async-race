@@ -35,7 +35,7 @@ const reducer: Reducer<State, Action> = (state = initialState, action) => {
     case 'TOTAL':
       return { ...state, total: action.val };
       case 'BEST':
-        return { ...state, best: [...state.best, action.value]};
+        return { ...state, best: (action.value.length ? [...state.best, action.value] : [])};
     default:
       return state;
   }
