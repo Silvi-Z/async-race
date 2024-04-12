@@ -14,4 +14,7 @@ interface ButtonProps {
     background-color: transparent;
     color: ${props=> props.color};
     border: 2px solid ${props=> props.color};
+    @media (max-width: 1200px) {
+      padding: 3px
+    }
 `;

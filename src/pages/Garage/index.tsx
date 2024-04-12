@@ -112,14 +112,14 @@ function Garage() {
         <h2>WINNER</h2>
         {bestScore && (
           <>
-            <p>Time: {bestScore[0]}</p>
+            <p>Time: {bestScore[0]}s</p>
             <p>Winner: {bestScore[1]}</p>
           </>
         )}
       </Modal>
 
-      <ControlLine start={start} stop={stop} currentPage={currentPage} id={selectedCarId} />
-      <img src={Arrows} alt="" />
+      <ControlLine cars={cars} start={start} stop={stop} currentPage={currentPage} id={selectedCarId} />
+      <img style={{width: '100%'}} src={Arrows} alt="" />
       <Races>
         {cars.map((car) => (
           <RaceLine status={status} setStatus={setStatus} startAllCars={startAllCars} stopAllCars={stopAllCars} updateCarId={updateCarId} currentPage={currentPage} {...{ car }} />

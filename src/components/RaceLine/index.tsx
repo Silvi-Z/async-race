@@ -19,6 +19,7 @@ interface RaceProps {
 const RaceLine: React.FC<RaceProps> = ({ setStatus, status, startAllCars, stopAllCars, currentPage, car, updateCarId }) => {
     const [velocity, setVelocity] = useState(0);
     const [drive, setDrive] = useState(true);
+    const [carStatus, setCarStatus] = useState('stopped')
     const dispatch = useDispatch()
     const deleteCar = async (id: number) => {
         await fetch(`http://localhost:3000/garage/${id}`, {
@@ -31,7 +32,7 @@ const RaceLine: React.FC<RaceProps> = ({ setStatus, status, startAllCars, stopAl
         const data = await startCarRace(id, action);
         const controller = new AbortController();
         setVelocity(data[0])
-        setStatus(action)
+        !!all ? setStatus(action) : setCarStatus(action)
         if(action === "started"){
             const driveTest = await startCarRace(id, 'drive');
             all && (driveTest ? dispatch({ type: "BEST", value: data }) : dispatch({ type: "BEST", value: [0, id] }))
@@ -58,8 +59,8 @@ const RaceLine: React.FC<RaceProps> = ({ setStatus, status, startAllCars, stopAl
                     <Button type={'submit'} onClick={() => deleteCar(car.id)} context="REMOVE" color="#58d2fe" />
                 </div>
                 <div>
-                    <Button disabled={status === "started"} onClick={() => start(car.id, "started", "")} context="A" color="#faff1f" />
-                    <Button disabled={status === "stopped"} onClick={() => start(car.id, "stopped", "")} context="B" color="#faff1f" />
+                    <Button disabled={carStatus === "started" || status === "started"} onClick={() => start(car.id, "started", "")} context="A" color="#faff1f" />
+                    <Button disabled={(carStatus === "stopped" && status === 'started') || (status === "stopped" && carStatus !== "started")} onClick={() => start(car.id, "stopped", "")} context="B" color="#faff1f" />
                 </div>
                 <div className='test'>
                     <CarIcon fill={car.color} />

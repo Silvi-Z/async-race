@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Button from '../Button';
 import {
     ColorPicker,
@@ -12,6 +12,7 @@ import { ControlLineWrapper } from '../../styled';
 import { getCarsForm, performApiRequest } from '../../form';
 import { useDispatch } from 'react-redux';
 import randomBrands from "../../cars.json"
+import { Car } from '../../pages/Garage';
 
 type CarData = {
     [brand: string]: string[];
@@ -20,20 +21,24 @@ type CarData = {
 type FieldType = {
     name?: string;
     color?: string;
+    defaultValue?: string
 };
 interface ControlLineProps {
     currentPage: number;
     id: number;
     start: () => void;
     stop: () => void;
+    cars: Array<any>
 }
+
 type Color = GetProp<ColorPickerProps, 'value'>;
 
-const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id }) => {
+const ControlLine: React.FC<ControlLineProps> = ({cars, start, stop, currentPage, id }) => {
     const dispatch = useDispatch()
-    const [color, setColor] = useState<Color>('');
+    const [color, setColor] = useState<Color>('1677ff');
     const [createForm] = Form.useForm();
     const [updateForm] = Form.useForm();
+    const [selectedCar, setSelectedCar] = useState<Car | undefined>();
 
     const changedColor = useMemo<string>(() =>
         (typeof color === 'string' ? color : color!.toHexString()),
@@ -56,6 +61,17 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id 
         updateForm.resetFields();
         await getCarsForm(dispatch, true, currentPage)
     };
+
+    useEffect(()=> {
+        const selected = cars?.find((car: Car) => car.id === id);
+        if(selected){
+            setSelectedCar(selected);
+        setColor(selected?.color)
+        updateForm.setFieldsValue(selected)
+        }
+
+    },[id, cars]);
+ 
 
 
     const generateRandomCars = async () => {
@@ -91,6 +107,9 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id 
                 <Button onClick={() => start()} size="small" context='RACE' color='#58fe9c' />
                 <Button onClick={() => stop()} size="small" context='RESET' color='#ff7de3' />
             </div>
+            <div>
+                <Button onClick={() => generateRandomCars()} size="small" context='GENERATE CARS' color='#ff7de3' />
+            </div>
             <Form
                 form={createForm}
                 layout="inline"
@@ -116,6 +135,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id 
                 form={updateForm}
                 layout="inline"
                 onFinish={updateCar}
+                initialValues={selectedCar}
             >
                 <Form.Item<FieldType>
                     name="name"
@@ -135,9 +155,7 @@ const ControlLine: React.FC<ControlLineProps> = ({ start, stop, currentPage, id 
             </Form>
             <div>
             </div>
-            <div>
-                <Button onClick={() => generateRandomCars()} size="small" context='GENERATE CARS' color='#ff7de3' />
-            </div>
+            
         </ControlLineWrapper>
     );
 }
