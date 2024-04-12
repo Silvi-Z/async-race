@@ -1,0 +1,27 @@
+/*!*****************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/index.css ***!
+  \*****************************************************************/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: url(94a7bdf0a1a4a592782f.jpg) no-repeat center;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.ant-pagination *, .ant-pagination .ant-pagination-item a  {
+    color: #1677ff;
+}
+
+.ant-pagination .ant-pagination-item-active {
+    background-color: transparent;
+}
+.ant-modal-body {
+    text-align: center;
+}

@@ -1,4 +1,5 @@
 import { Dispatch } from "redux";
+const BASE_URL = 'http://localhost:3000';
 
 interface Car {
     id: number;
@@ -27,8 +28,8 @@ export const getCarsForm = async (
 ): Promise<Car[]> => {
     try {
         const response = await fetch(
-            limit ? `http://localhost:3000/garage?_page=${currentPage}&_limit=7`
-            : `http://localhost:3000/garage`
+            limit ? `${BASE_URL}/garage?_page=${currentPage}&_limit=7`
+            : `${BASE_URL}/garage`
         );
         const carsData: Car[] = await response.json();
         if(limit){
