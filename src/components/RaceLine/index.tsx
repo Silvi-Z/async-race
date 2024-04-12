@@ -5,21 +5,20 @@ import { Race } from '../../styled';
 import { Car } from '../../pages/Garage';
 import { getCarsForm, startCarRace } from '../../form';
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { State } from '../..';
 
 interface RaceProps {
     car: Car,
     currentPage: number,
     updateCarId: (arg: number) => void,
-    startAllCars: boolean
+    startAllCars: boolean,
+    stopAllCars: boolean,
+    setStatus: (arg: string) => void,
+    status: string
 }
 
-const RaceLine: React.FC<RaceProps> = ({ startAllCars, currentPage, car, updateCarId }) => {
+const RaceLine: React.FC<RaceProps> = ({ setStatus, status, startAllCars, stopAllCars, currentPage, car, updateCarId }) => {
     const [velocity, setVelocity] = useState(0);
     const [drive, setDrive] = useState(true);
-    const [status, setStatus] = useState('stopped')
-    const best = useSelector((state: State) => state.best)
     const dispatch = useDispatch()
     const deleteCar = async (id: number) => {
         await fetch(`http://localhost:3000/garage/${id}`, {
@@ -30,18 +29,27 @@ const RaceLine: React.FC<RaceProps> = ({ startAllCars, currentPage, car, updateC
 
     const start = async (id: number, action: string, all: string) => {
         const data = await startCarRace(id, action);
+        const controller = new AbortController();
         setVelocity(data[0])
-        setStatus('started')
+        setStatus(action)
         if(action === "started"){
             const driveTest = await startCarRace(id, 'drive');
             all && (driveTest ? dispatch({ type: "BEST", value: data }) : dispatch({ type: "BEST", value: [0, id] }))
             setDrive(driveTest)
+        }else {
+            setDrive(false)
+            controller.abort();
         }
     }
 
     useEffect(() => {
-        startAllCars && start(car.id, "started", "all")
-    }, [startAllCars])
+        if (startAllCars) {
+            start(car.id, "started", "all");
+        } else if (stopAllCars) {
+            start(car.id, "stopped", "all");
+        }
+    }, [startAllCars, stopAllCars]);
+
     return (
         <Race speed={velocity} drive={drive}>
             <div>

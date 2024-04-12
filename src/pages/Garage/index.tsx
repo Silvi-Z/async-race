@@ -24,9 +24,10 @@ function Garage() {
   const dispatch = useDispatch();
   const carsSelector = useSelector((state: State) => state.cars)
   const [startAllCars, setStartAllCars] = useState(false)
+  const [stopAllCars, setStopAllCars] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bestScore, setBestScore] = useState<[number, string] | null>(null);
-
+  const [status, setStatus] = useState('stopped')
 
   const getCars = async () => {
     await getCarsForm(currentPage, dispatch);
@@ -39,7 +40,7 @@ function Garage() {
         return smallest;
       }
     }, best.find(item => item[0] > 0));
-    if (bestResult) {
+    if (bestResult && status === "started") {
       const winnerCar = cars.find(car => car.id === bestResult[1]);
       if (winnerCar) {
         setBestScore([bestResult[0], winnerCar.name])
@@ -69,7 +70,13 @@ function Garage() {
   }
 
   const start = async () => {
-    setStartAllCars(!startAllCars)
+    setStopAllCars(false)
+    setStartAllCars(true)
+  }
+
+  const stop = async () => {
+    setStartAllCars(false)
+    setStopAllCars(true)
   }
 
   return (
@@ -84,11 +91,11 @@ function Garage() {
         )}
       </Modal>
 
-      <ControlLine start={start} currentPage={currentPage} id={selectedCarId} />
+      <ControlLine start={start} stop={stop} currentPage={currentPage} id={selectedCarId} />
       <img src={Arrows} alt="" />
       <Races>
         {cars.map((car) => (
-          <RaceLine startAllCars={startAllCars} updateCarId={updateCarId} currentPage={currentPage} {...{ car }} />
+          <RaceLine status={status} setStatus={setStatus} startAllCars={startAllCars} stopAllCars={stopAllCars} updateCarId={updateCarId} currentPage={currentPage} {...{ car }} />
         ))}
       </Races>
       <Flex justify={"space-between"} align={'center'}>

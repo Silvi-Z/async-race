@@ -33,19 +33,19 @@ export const getCarsForm = async (
         dispatch({ type: "CARS", val: carsData });
         dispatch({ type: "TOTAL", val: response.headers.get("X-Total-Count") });
     } catch (error) {
-        throw error; // Re-throw the error to be handled by caller
+        throw error;
     }
 };
 
-export const startCarRace = async (id: number, status: string) => {
+export const startCarRace = async (id: number, status: string, signal?: AbortSignal) => {
     try {
         const res = await performApiRequest(
             `http://localhost:3000/engine?id=${id}&status=${status}`,
             "PATCH",
-            {}
+            {signal},
         );
-        return res?.success || [Math.floor((res.distance /res.velocity) / 1000), id];
+        return res?.success || [Math.floor((res.distance / res.velocity) / 1000), id];
     } catch (error) {
-        return false
+        return false;
     }
 };
