@@ -25,6 +25,9 @@ const RaceLine: React.FC<RaceProps> = ({ setStatus, status, startAllCars, stopAl
         await fetch(`http://localhost:3000/garage/${id}`, {
             method: "DELETE"
         });
+        await fetch(`http://localhost:3000/winners/${id}`, {
+            method: "DELETE"
+        })
         await getCarsForm(dispatch, true, currentPage)
     }
 
